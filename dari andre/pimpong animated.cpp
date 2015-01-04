@@ -59,6 +59,13 @@ float Kd = 0.4;
 float Ks = 0.4;
 float Kp = 0.5;
 
+//camera points
+float angle = 0.0;
+float Lx = 0.0;
+float Lz = -1.0;
+float Ex = 0.0;
+float Ez = 1.0;
+
 void init_material(float Ka, float Kd, float Ks, float Kp, float Mr, float Mg, float Mb)
 {
 	// Material variables
@@ -370,10 +377,10 @@ void display()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+    //glLoadIdentity();
 
-    glTranslatef(0, -0.5, 0);
-    glRotatef(50.0, 0, 1, 0);
+    //glTranslatef(0, -0.5, 0);
+    //glRotatef(50.0, 0, 1, 0);
 
 	init_material(Ka, Kd, Ks, 100 * Kp, Red, Green, Blue);
 	draw_ball(Px, Py, Pz, Radius);
@@ -387,8 +394,9 @@ void display()
 	//draw_stick();
 
 	draw_tennis_table();
+	gluLookAt(Ex, 0.0f, Ez, Ex+Lx, 0.0f, Ez+Lz, 0.0, 1.0, 0.0);
 
-    glLoadIdentity();
+    //glLoadIdentity();
 
 	glFlush();
 	glutSwapBuffers();
@@ -411,6 +419,35 @@ void timer(int func){
 	glutTimerFunc(5, timer, 0);
 }
 
+void keypressed(unsigned char key, int x, int y){
+	
+	float fraction = 0.1f;
+
+	switch (key)
+	{
+	case 'a':
+		angle -= 0.01f;
+		Lx = sin(angle);
+		Lz = -cos(angle);
+		break;
+	case 'd':
+		angle += 0.01f;
+		Lx = sin(angle);
+		Lz = -cos(angle);
+		break;
+	case 'w':
+		Ex += Lx * fraction;
+		Ez += Lz * fraction;
+		break;
+	case 's':
+		Ex -= Lx * fraction;
+		Ez -= Lz * fraction;
+		break;
+	default:
+		break;
+	}
+}
+
 int main(int argc, char *argv[])
 {
 	// Create OpenGL window
@@ -423,7 +460,8 @@ int main(int argc, char *argv[])
 
 	glutDisplayFunc(display);
 	glutTimerFunc(5, timer, 0);
-	glutMouseFunc(mouse);
+	glutKeyboardFunc(keypressed);
+    glutMouseFunc(mouse);
 
 	glutMainLoop();
 	return 0;
