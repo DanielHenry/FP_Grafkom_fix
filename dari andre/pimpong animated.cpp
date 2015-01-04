@@ -1,11 +1,10 @@
-#include "stdafx.h"
+#include <stdio.h>
 
 #include <GL\freeglut.h>
-#include <GL\GL.h>
+#include <GL\gl.h>
 
 #include <math.h>
 #include <stdlib.h>
-#include <conio.h>
 
 #ifndef M_PI
 #    define M_PI 3.14159265358979323846
@@ -233,7 +232,7 @@ void draw_bat(float centerX, float centerY, float centerZ, float radius, float t
 	return;
 }
 
-void draw(){
+void draw_tennis_table(){
 	//meja
 	glColor3f(0, 0, 1);
 	glPushMatrix();
@@ -371,9 +370,12 @@ void display()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    glTranslatef(0, -0.5, 0);
+    glRotatef(50.0, 0, 1, 0);
 
 	init_material(Ka, Kd, Ks, 100 * Kp, Red, Green, Blue);
-
 	draw_ball(Px, Py, Pz, Radius);
 
 	//init_material(Ka, Kd, Ks, 100 * Kp, bred, bgreen, bblue);
@@ -384,7 +386,9 @@ void display()
 	//glLoadIdentity();
 	//draw_stick();
 
-	draw();
+	draw_tennis_table();
+
+    glLoadIdentity();
 
 	glFlush();
 	glutSwapBuffers();
@@ -422,7 +426,5 @@ int main(int argc, char *argv[])
 	glutMouseFunc(mouse);
 
 	glutMainLoop();
-
-	_getch();
 	return 0;
 }
